@@ -12,35 +12,23 @@ const client = new Client({
     puppeteer: { 
         headless: true,
         executablePath: '/usr/bin/google-chrome',
-        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'] 
+        args: ['--no-sandbox', '--disable-setuid-sandbox'] 
     }
 });
 
-let timerJogar = null;
-
 client.on('message', async (msg) => {
     const text = msg.body.toLowerCase();
-    const chat = await msg.getChat();
-    const userContact = await msg.getContact();
-    const userName = userContact.pushname || "Frango";
-
-    if (text.includes('jogar') || text.includes('bora') || text.includes('vms')) {
-        if (timerJogar) clearTimeout(timerJogar);
-        timerJogar = setTimeout(async () => {
-            chat.sendMessage("E aí bando de frangos? Alguém chamou pra jogar e tá todo mundo calado? Vão amarelar mesmo? 🐔");
-        }, 30 * 60 * 1000);
-    }
-
     if (text.includes('@bot')) {
+        const chat = await msg.getChat();
         chat.sendStateTyping();
-        const prompt = "Você é um membro ultra inteligente e zoeiro de um grupo de hardware. O Renan é um dos membros (não é o bot). Trate todos como 'frangos'. Se pedirem hardware ou jogos, pesquise no Google. Preze QUALIDADE acima de tudo. Se o preço for bom mas a marca for ruim, avise que é bomba. Pergunta: " + msg.body;
+        const prompt = "Você é um membro zoeiro de um grupo gamer. O Renan é seu amigo do grupo. Trate todos como 'frangos'. Pesquise no Google sobre hardware/games se pedirem. Responda com qualidade. Pergunta: " + msg.body;
         const result = await model.generateContent(prompt);
-        return msg.reply(result.response.text());
+        msg.reply(result.response.text());
     }
 });
 
 client.on('qr', qr => qrcode.generate(qr, {small: true}));
-client.on('ready', () => console.log('BOT ONLINE! CONECTA AÍ FRANGO!'));
+client.on('ready', () => console.log('BOT ONLINE! CONECTA LOGO FRANGO!'));
 client.initialize();
 
 const app = express();

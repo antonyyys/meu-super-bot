@@ -1,9 +1,7 @@
-﻿FROM ghcr.io/puppeteer/puppeteer:latest
-USER root
-RUN apt-get update && apt-get install -y libgbm-dev nss libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libpango-1.0-0 libcairo2 libasound2
+﻿FROM alefyee/whatsapp-web.js:latest
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm install --production
 COPY . .
 EXPOSE 3000
 CMD ["node", "index.js"]
