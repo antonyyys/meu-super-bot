@@ -12,7 +12,13 @@ const client = new Client({
     puppeteer: { 
         headless: true,
         executablePath: '/usr/bin/google-chrome',
-        args: ['--no-sandbox', '--disable-setuid-sandbox'] 
+        args: [
+            '--no-sandbox', 
+            '--disable-setuid-sandbox', 
+            '--disable-dev-shm-usage', 
+            '--single-process', 
+            '--no-zygote'
+        ] 
     }
 });
 
@@ -21,14 +27,18 @@ client.on('message', async (msg) => {
     if (text.includes('@bot')) {
         const chat = await msg.getChat();
         chat.sendStateTyping();
-        const prompt = "Você é um membro zoeiro de um grupo gamer. O Renan é seu amigo do grupo. Trate todos como 'frangos'. Pesquise no Google sobre hardware/games se pedirem. Responda com qualidade. Pergunta: " + msg.body;
-        const result = await model.generateContent(prompt);
-        msg.reply(result.response.text());
+        const prompt = "Você é um membro zoeiro de um grupo gamer. O Renan é um membro do grupo. Trate todos como 'frangos'. Pesquise no Google Search se pedirem algo de hardware. Pergunta: " + msg.body;
+        try {
+            const result = await model.generateContent(prompt);
+            msg.reply(result.response.text());
+        } catch (e) {
+            msg.reply("Tô ocupado aqui frango, tenta de novo!");
+        }
     }
 });
 
 client.on('qr', qr => qrcode.generate(qr, {small: true}));
-client.on('ready', () => console.log('BOT ONLINE! CONECTA LOGO FRANGO!'));
+client.on('ready', () => console.log('BOT ONLINE! CONECTA LOGO!'));
 client.initialize();
 
 const app = express();

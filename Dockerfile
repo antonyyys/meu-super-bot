@@ -1,4 +1,5 @@
-﻿FROM alefyee/whatsapp-web.js:latest
+﻿FROM ghcr.io/puppeteer/puppeteer:latest
+USER root
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --production
